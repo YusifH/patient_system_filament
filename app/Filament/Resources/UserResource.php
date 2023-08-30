@@ -31,8 +31,8 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('username')->required(),
                 Forms\Components\TextInput::make('email')->email()->required(),
                 Forms\Components\TextInput::make('password')->password()->required(),
-                Select::make('user_type_id')
-                ->relationship('userType', 'name')
+                Select::make('position_id')
+                ->relationship('position', 'name')
             ]);
     }
 
@@ -61,14 +61,14 @@ class UserResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -77,5 +77,5 @@ class UserResource extends Resource
             'view' => Pages\ViewUser::route('/{record}'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 }
