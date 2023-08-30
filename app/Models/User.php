@@ -36,9 +36,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function userType()
+    public function position()
     {
-        return $this->belongsTo(UserType::class);
+        return $this->belongsTo(Position::class);
     }
 
     /**
