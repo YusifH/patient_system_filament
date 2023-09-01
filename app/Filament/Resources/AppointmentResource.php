@@ -7,7 +7,6 @@ use App\Filament\Resources\AppointmentResource\RelationManagers;
 use App\Models\Appointment;
 use App\Models\Diagnosis;
 use Filament\Forms\Components\Section;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -15,11 +14,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AppointmentResource extends Resource
 {
@@ -75,7 +71,6 @@ class AppointmentResource extends Resource
                 TextColumn::make('first_diagnosis_id')
                 ->label('Diaqnoz')
                 ->disabled()
-                ->options(Diagnosis::all()->pluck('name', 'id')),
             ])
             ->filters([
                 //
