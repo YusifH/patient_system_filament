@@ -16,4 +16,5 @@ class EditAppointment extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
 }

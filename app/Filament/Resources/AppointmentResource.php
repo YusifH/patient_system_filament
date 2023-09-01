@@ -6,6 +6,7 @@ use App\Filament\Resources\AppointmentResource\Pages;
 use App\Filament\Resources\AppointmentResource\RelationManagers;
 use App\Models\Appointment;
 use App\Models\Diagnosis;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Section;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -15,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action as ActionsAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -42,7 +44,8 @@ class AppointmentResource extends Resource
                         ->required(),
                     Select::make('doctor_id')
                         ->label('Hekim')
-                        ->relationship('doctor', 'fullname')->required(),
+                        ->relationship('doctor', 'fullname')
+                        ->required(),
                     Select::make('first_diagnosis_id')
                         ->label('Diaqnoz')
                         ->options(Diagnosis::all()->pluck('name', 'id')),
@@ -75,13 +78,22 @@ class AppointmentResource extends Resource
                 TextColumn::make('first_diagnosis_id')
                 ->label('Diaqnoz')
                 ->disabled()
-                ->options(Diagnosis::all()->pluck('name', 'id')),
+                // ->descriptions(Diagnosis::all()->pluck('name', 'id')),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionsAction::make('Tesdiqle')
+                ->action(function (Appointment $appointment): void {
+                    // dump($appointment);
+
+                })
+                ->color('primary')
+                ->requiresConfirmation(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->color('warning')
+                ->successNotificationTitle('Deyisiklik Ugurla Tamamlandi'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
