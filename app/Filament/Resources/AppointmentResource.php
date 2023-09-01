@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -74,10 +75,10 @@ class AppointmentResource extends Resource
                     ->sortable(),
                 TextColumn::make('doctor.fullname')
                     ->label('Qəbul edəcək həkim'),
-                TextColumn::make('first_diagnosis_id')
+                SelectColumn::make('first_diagnosis_id')
                     ->label('Diaqnoz')
                     ->disabled()
-                // ->descriptions(Diagnosis::all()->pluck('name', 'id')),
+                 ->options(Diagnosis::all()->pluck('name', 'id')),
             ])
             ->filters([
                 //
