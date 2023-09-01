@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DoctorResource\Pages;
 use App\Filament\Resources\DoctorResource\RelationManagers;
 use App\Models\Doctor;
+use App\Models\User;
 use Filament\Forms\Components\Card;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DoctorResource extends Resource
 {
-    protected static ?string $model = Doctor::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationLabel = 'Həkimlər';
@@ -29,32 +30,36 @@ class DoctorResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
-                ->schema([
-                    TextInput::make('fullname')->required(),
-                    TextInput::make('email')->email()->required(),
-                    TextInput::make('phone_number'),
-                    Select::make('position_id')
-                    ->relationship('position', 'name')->required()
-                ])->columns(2)
+                // Section::make()
+                // ->schema([
+                //     TextInput::make('fullname')->required(),
+                //     TextInput::make('email')->email()->required(),
+                //     TextInput::make('phone_number'),
+                //     TextColumn::make('doctor_about'),
+                //     Select::make('position_id')
+                //     ->relationship('position', 'name')->required(),
+                // ])->columns(2)
             ]);
     }
 
     public static function table(Table $table): Table
     {
+
         return $table
+        ->query(User::where('user_type', 1))
             ->columns([
-                TextColumn::make('fullname'),
+                TextColumn::make('name'),
                 TextColumn::make('email'),
                 TextColumn::make('phone_number'),
-                TextColumn::make('position.name')
+                TextColumn::make('position.name'),
+                TextColumn::make('doctor_about')
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -62,7 +67,7 @@ class DoctorResource extends Resource
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ]);
     }
 

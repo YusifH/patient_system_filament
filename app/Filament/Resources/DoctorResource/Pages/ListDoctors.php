@@ -10,10 +10,20 @@ class ListDoctors extends ListRecords
 {
     protected static string $resource = DoctorResource::class;
 
-    protected function getHeaderActions(): array
+    // protected function getHeaderActions(): array
+    // {
+    //     return [
+    //         Actions\CreateAction::make()->label('Yeni Hekim elave et'),
+    //     ];
+    // }
+
+    public function modalSubheading(): static
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        $this->modalDescription('Hekimler');
+
+        return $this;
     }
+
+
+
 }
