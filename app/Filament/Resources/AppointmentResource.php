@@ -10,7 +10,6 @@ use App\Models\Patient;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Section;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -118,7 +117,6 @@ class AppointmentResource extends Resource
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ]);
-
     }
 
     public static function getRelations(): array
