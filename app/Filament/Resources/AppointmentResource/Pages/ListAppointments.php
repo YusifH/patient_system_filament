@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListAppointments extends ListRecords
 {
@@ -15,8 +16,14 @@ class ListAppointments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-                
+
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getTableQuery(): Builder
+    {
+        return Appointment::query()->where('status', 0);
+    }
+
 }

@@ -19,4 +19,8 @@ class Appointment extends Model
     public function diagnosis(){
         return $this->belongsTo(Diagnosis::class);
     }
+    public function doctor_advices()
+    {
+        return $this->belongsToMany(DoctorAdvice::class);
+    }
 }

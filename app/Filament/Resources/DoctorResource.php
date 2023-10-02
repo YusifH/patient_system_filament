@@ -8,10 +8,12 @@ use App\Models\Doctor;
 use App\Models\User;
 use Filament\Forms\Components\Card;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -30,15 +32,21 @@ class DoctorResource extends Resource
     {
         return $form
             ->schema([
-                // Section::make()
-                // ->schema([
-                //     TextInput::make('fullname')->required(),
-                //     TextInput::make('email')->email()->required(),
-                //     TextInput::make('phone_number'),
-                //     TextColumn::make('doctor_about'),
-                //     Select::make('position_id')
-                //     ->relationship('position', 'name')->required(),
-                // ])->columns(2)
+                TextInput::make('name')->required(),
+                TextInput::make('email')
+                    ->email()
+                    ->required(),
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->disabledOn('view'),
+                TextInput::make('user_type')
+                    ->default(1)->hidden(),
+                Select::make('position_id')
+                    ->relationship('position', 'name')
+                    ->nullable(),
+                TextInput::make('phone_number')->nullable(),
+                TextInput::make('doctor_about')->nullable(),
             ]);
     }
 
@@ -46,7 +54,7 @@ class DoctorResource extends Resource
     {
 
         return $table
-        ->query(User::where('user_type', 1))
+            ->query(User::where('user_type', 1))
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email'),

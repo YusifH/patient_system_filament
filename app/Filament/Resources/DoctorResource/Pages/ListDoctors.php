@@ -3,27 +3,25 @@
 namespace App\Filament\Resources\DoctorResource\Pages;
 
 use App\Filament\Resources\DoctorResource;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListDoctors extends ListRecords
 {
     protected static string $resource = DoctorResource::class;
 
-    // protected function getHeaderActions(): array
-    // {
-    //     return [
-    //         Actions\CreateAction::make()->label('Yeni Hekim elave et'),
-    //     ];
-    // }
+     protected function getHeaderActions(): array
+     {
+         return [
+             Actions\CreateAction::make()->label('Yeni Hekim elave et'),
+         ];
+     }
 
-    public function modalSubheading(): static
+    protected function getTableQuery(): Builder
     {
-        $this->modalDescription('Hekimler');
-
-        return $this;
+        return User::query()->where('user_type', 1);
     }
-
-
 
 }
