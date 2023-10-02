@@ -3,20 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AppointmentResource\Pages;
-use App\Filament\Resources\AppointmentResource\RelationManagers;
 use App\Models\Appointment;
 use App\Models\Diagnosis;
-use App\Models\Patient;
-use App\Models\User;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -31,37 +24,62 @@ class AppointmentResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
-                    ->schema([
-                        Select::make('patient_id')
+                Forms\Components\Select::make('patient_id')
                             ->label('Xəstə')
                             ->relationship('patient', 'fullname')
                             ->searchable()
                             ->preload()
-//                            ->disabledOn('submit')
+                            ->disabledOn('edit')
                             ->required(),
-                        Select::make('doctor_id')
+                Forms\Components\Select::make('doctor_id')
                             ->label('Həkim')
                             ->relationship('doctor', 'fullname')
+                            ->disabledOn('edit')
                             ->required(),
-                        Select::make('first_diagnosis_id')
+                Forms\Components\Select::make('first_diagnosis_id')
                             ->label('Diaqnoz')
+                            ->disabledOn('edit')
                             ->options(Diagnosis::all()->pluck('name', 'id')),
-                        Select::make('first_or_second')
+                Forms\Components\Select::make('first_or_second')
                             ->label('Müayinə tipi')
+                            ->disabledOn('edit')
                             ->options(['0' => 'İlkin müyinə', '1' => 'Təkrar müayinə'])
                             ->required(),
-                        DatePicker::make('appointment_date')
+                Forms\Components\DatePicker::make('appointment_date')
                             ->label('Qeydiyyat tarixi')
                             ->nullable(),
-                        Textarea::make('appointment_notes')
+                Forms\Components\Textarea::make('appointment_notes')
                             ->label('Qeyd')
                             ->nullable(),
-                        TextInput::make('status')
-                            ->default('0')
-                            ->hidden()
-                    ])->columns(2)
+                Forms\Components\TextInput::make('status')
+                            ->hidden('edit')
+                            ->default(1),
+                Forms\Components\DatePicker::make('appointment_history')
+                            ->label('Müayinə tarixi')
+                            ->hiddenOn('create')
+                            ->nullable(),
+                Forms\Components\Select::make('second_diagnosis_id')
+                            ->label('Yekun Diaqnoz')
+                            ->hiddenOn('create')
+                            ->options(Diagnosis::all()->pluck('name', 'id')),
+                Forms\Components\Select::make('third_diagnosis_id')
+                            ->label('Əlaqəli Diaqnoz')
+                            ->nullable()
+                            ->hiddenOn('create')
+                            ->options(Diagnosis::all()->pluck('name', 'id')),
+                Forms\Components\Select::make('doctor_advice_id')
+                            ->label('Hekim meslehetleri')
+                            ->multiple()
+                            ->preload()
+                            ->hiddenOn('create')
+                            ->relationship('doctor_advices', 'name'),
+                Forms\Components\Textarea::make('appointment_history_note')
+                            ->label('Müayinə qeydi')
+                            ->hiddenOn('create')
+                            ->nullable(),
             ]);
+
+
     }
 
     public static function table(Table $table): Table
@@ -73,42 +91,23 @@ class AppointmentResource extends Resource
                     ->sortable(),
                 TextColumn::make('doctor.fullname')
                     ->label('Qəbul edəcək həkim'),
-                TextColumn::make('first_diagnosis_id')
+                SelectColumn::make('first_diagnosis_id')
                     ->label('Diaqnoz')
                     ->disabled()
-                // ->descriptions(Diagnosis::all()->pluck('name', 'id')),
+                    ->options(Diagnosis::all()->pluck('name', 'id')),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('submit')
-
-                    ->form([
-//                        Select::make('patient_id')
-//                            ->label('Xeste')
-//                            ->options(Patient::query()->pluck('fullname', 'id')),
-                        Select::make('first_or_second')
-                            ->label('Müayinə tipi')
-                            ->options(['0' => 'İlkin müyinə', '1' => 'Təkrar müayinə']),
-                        DatePicker::make('appointment_date')
-                            ->label('Qeydiyyat tarixi')
-                            ->nullable(),
-                        Textarea::make('appointment_notes')
-                            ->label('Qeyd')
-                            ->nullable(),
-                    ])
-                    ->action(fn(Appointment $appointment) => $appointment->update(
-                        [
-                            'status' => 1,
-                        ]
-                    ))
-                    ->color('primary')
-                    ->requiresConfirmation(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\EditAction::make()->color('warning')
-                    ->successNotificationTitle('Deyisiklik Ugurla Tamamlandi'),
-            ])
+                    Tables\Actions\DeleteAction::make()->button(),
+                    Tables\Actions\EditAction::make()
+                        ->label('Təsdiqlə')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->button()
+                        ->successNotificationTitle('Müayinə uğurla təsdiqləndi.'),
+                ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -132,6 +131,8 @@ class AppointmentResource extends Resource
             'index' => Pages\ListAppointments::route('/'),
             'create' => Pages\CreateAppointment::route('/create'),
             'edit' => Pages\EditAppointment::route('/{record}/edit'),
+            'view' => Pages\ViewAppointment::route('/{record}'),
         ];
     }
+
 }

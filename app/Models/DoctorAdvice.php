@@ -14,4 +14,6 @@ class DoctorAdvice extends Model
     public function position(){
         return $this->belongsTo(Position::class);
     }
+
+
 }

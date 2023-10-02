@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Appointment;
+use App\Models\DoctorAdvice;
+use App\Models\Patient;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +18,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('position_id');
+            $table->timestamps();
+        });
+
+        Schema::create('appointment_doctor_advice', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Appointment::class)->index();
+            $table->foreignIdFor(DoctorAdvice::class)->index();
             $table->timestamps();
         });
     }
