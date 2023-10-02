@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Mockery\Matcher\Closure;
 
 class AppointmentResource extends Resource
 {
@@ -52,8 +53,7 @@ class AppointmentResource extends Resource
                             ->label('Qeyd')
                             ->nullable(),
                 Forms\Components\TextInput::make('status')
-                            ->hidden('edit')
-                            ->default(1),
+                            ->hidden(fn (Appointment $appointment): string => $appointment->update(['status' => 1])),
                 Forms\Components\DatePicker::make('appointment_history')
                             ->label('Müayinə tarixi')
                             ->hiddenOn('create')

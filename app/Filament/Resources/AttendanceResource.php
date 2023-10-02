@@ -59,6 +59,7 @@ class AttendanceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('count')
                     ->label('Geldiyi gunlerin sayi')
+                    ->action(fn( Attendance $attendance) => $attendance->update(['count' => $attendance->count + 1]))
                     ->alignCenter()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('first_date')
