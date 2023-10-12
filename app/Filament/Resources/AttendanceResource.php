@@ -8,7 +8,9 @@ use App\Models\Attendance;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
@@ -59,7 +61,6 @@ class AttendanceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('count')
                     ->label('Geldiyi gunlerin sayi')
-                    ->action(fn( Attendance $attendance) => $attendance->update(['count' => $attendance->count + 1]))
                     ->alignCenter()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('first_date')
@@ -86,6 +87,21 @@ class AttendanceResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('Davamiyyet')
+                    ->modalDescription(fn(Attendance $attendance) => ($attendance->patient->fullname . ' Xestenin davamiyyetine deyisklik edirsiz'))
+                    ->modalWidth('md')
+                    ->modalSubmitAction(false)
+                    ->modalIcon('heroicon-o-trash')
+                    ->extraModalFooterActions([
+                        Action::make('Əlavə et')
+                            ->action(fn( Attendance $attendance) => $attendance->update(['count' => $attendance->count + 1])),
+                        Action::make('Sil')
+                            ->color('danger')
+                            ->action(fn( Attendance $attendance) => $attendance->update(['count' => $attendance->count - 1])),
+
+                    ])
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
