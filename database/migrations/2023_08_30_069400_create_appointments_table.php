@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('appointment_date')->nullable();
             $table->date('appointment_history')->nullable();
             $table->text('appointment_history_note')->nullable();
-            $table->integer('status')->required();
+            $table->integer('status')->default(0)->nullable();
             $table->timestamps();
         });
     }

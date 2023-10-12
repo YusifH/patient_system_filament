@@ -26,57 +26,59 @@ class AppointmentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('patient_id')
-                            ->label('Xəstə')
-                            ->relationship('patient', 'fullname')
-                            ->searchable()
-                            ->preload()
-                            ->disabledOn('edit')
-                            ->required(),
+                    ->label('Xəstə')
+                    ->relationship('patient', 'fullname')
+                    ->searchable()
+                    ->preload()
+                    ->disabledOn('edit')
+                    ->required(),
                 Forms\Components\Select::make('doctor_id')
-                            ->label('Həkim')
-                            ->relationship('doctor', 'fullname')
-                            ->disabledOn('edit')
-                            ->required(),
+                    ->label('Həkim')
+                    ->relationship('doctor', 'fullname')
+                    ->disabledOn('edit')
+                    ->required(),
                 Forms\Components\Select::make('first_diagnosis_id')
-                            ->label('Diaqnoz')
-                            ->disabledOn('edit')
-                            ->options(Diagnosis::all()->pluck('name', 'id')),
+                    ->label('Diaqnoz')
+                    ->disabledOn('edit')
+                    ->options(Diagnosis::all()->pluck('name', 'id')),
                 Forms\Components\Select::make('first_or_second')
-                            ->label('Müayinə tipi')
-                            ->disabledOn('edit')
-                            ->options(['0' => 'İlkin müyinə', '1' => 'Təkrar müayinə'])
-                            ->required(),
+                    ->label('Müayinə tipi')
+                    ->disabledOn('edit')
+                    ->options(['0' => 'İlkin müyinə', '1' => 'Təkrar müayinə'])
+                    ->required(),
                 Forms\Components\DatePicker::make('appointment_date')
-                            ->label('Qeydiyyat tarixi')
-                            ->nullable(),
+                    ->label('Qeydiyyat tarixi')
+                    ->nullable(),
                 Forms\Components\Textarea::make('appointment_notes')
-                            ->label('Qeyd')
-                            ->nullable(),
+                    ->label('Qeyd')
+                    ->nullable(),
                 Forms\Components\TextInput::make('status')
-                            ->hidden(fn (Appointment $appointment): string => $appointment->update(['status' => 1])),
+                    ->hidden(
+//                        fn(Appointment $appointment): string => $appointment->update(['status' => 1])
+                    ),
                 Forms\Components\DatePicker::make('appointment_history')
-                            ->label('Müayinə tarixi')
-                            ->hiddenOn('create')
-                            ->nullable(),
+                    ->label('Müayinə tarixi')
+                    ->hiddenOn('create')
+                    ->nullable(),
                 Forms\Components\Select::make('second_diagnosis_id')
-                            ->label('Yekun Diaqnoz')
-                            ->hiddenOn('create')
-                            ->options(Diagnosis::all()->pluck('name', 'id')),
+                    ->label('Yekun Diaqnoz')
+                    ->hiddenOn('create')
+                    ->options(Diagnosis::all()->pluck('name', 'id')),
                 Forms\Components\Select::make('third_diagnosis_id')
-                            ->label('Əlaqəli Diaqnoz')
-                            ->nullable()
-                            ->hiddenOn('create')
-                            ->options(Diagnosis::all()->pluck('name', 'id')),
+                    ->label('Əlaqəli Diaqnoz')
+                    ->nullable()
+                    ->hiddenOn('create')
+                    ->options(Diagnosis::all()->pluck('name', 'id')),
                 Forms\Components\Select::make('doctor_advice_id')
-                            ->label('Hekim meslehetleri')
-                            ->multiple()
-                            ->preload()
-                            ->hiddenOn('create')
-                            ->relationship('doctor_advices', 'name'),
+                    ->label('Hekim meslehetleri')
+                    ->multiple()
+                    ->preload()
+                    ->hiddenOn('create')
+                    ->relationship('doctor_advices', 'name'),
                 Forms\Components\Textarea::make('appointment_history_note')
-                            ->label('Müayinə qeydi')
-                            ->hiddenOn('create')
-                            ->nullable(),
+                    ->label('Müayinə qeydi')
+                    ->hiddenOn('create')
+                    ->nullable(),
             ]);
 
 
@@ -100,14 +102,14 @@ class AppointmentResource extends Resource
                 //
             ])
             ->actions([
-                    Tables\Actions\DeleteAction::make()->button(),
-                    Tables\Actions\EditAction::make()
-                        ->label('Təsdiqlə')
-                        ->icon('heroicon-o-check-circle')
-                        ->color('success')
-                        ->button()
-                        ->successNotificationTitle('Müayinə uğurla təsdiqləndi.'),
-                ])
+                Tables\Actions\DeleteAction::make()->button(),
+                Tables\Actions\EditAction::make()
+                    ->label('Təsdiqlə')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->button()
+                    ->successNotificationTitle('Müayinə uğurla təsdiqləndi.'),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
